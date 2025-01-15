@@ -46,5 +46,6 @@ jobs:
           BUCKET_NAME: ${{ vars.BUCKET_NAME }}
       - name: Use secrets
         run: |
+          echo "The secret value is ${{ env }}"
           echo "The secret value is ${{ env.WAITING_MASTER_URL }}"
           echo "The secret value is ${{ env.API_BASE_URL }}"
