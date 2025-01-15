@@ -14,15 +14,37 @@ on:
           - stg
           - prd
 
+env:
+  AWS_ROLE_ARN: "arn:aws:iam::578868370045:role/shared-role-for-github-action-oidc"
+  AWS_REGION: "ap-northeast-2"
+  AWS_SECRET_MANAGER_ARN: "arn:aws:secretsmanager:ap-northeast-2:578868370045:secret:dev/torder-ceo/front-EiHqyH"
+  BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+
 jobs:
-  build:
+  checkEnv:
     environment: ${{ github.event.inputs.SERVICE_ENV }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 환경 변수 로드(From Secret Manager)
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: ${{ env.AWS_SECRET_MANAGER_ARN}}
+          parse-json-secrets: true
+
       - name: Print BUCKET_NAME
         run: echo "BUCKET_NAME is $BUCKET_NAME"
         env:
-          BUCKET_NAME: ${{ vars.BUCKET_NAME }} # BUCKET_NAME을 GitHub Secrets에 설정해두었다고 가정
+          BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+      - name: Use secrets
+        run: |
+          echo "The secret value is ${{ env.WAITING_MASTER_URL }}"
+          echo "The secret value is ${{ env.API_BASE_URL }}"
