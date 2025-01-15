@@ -13,6 +13,8 @@ on:
           - qa
           - stg
           - prd
+permissions:
+  id-token: write
 
 env:
   AWS_ROLE_ARN: "arn:aws:iam::578868370045:role/shared-role-for-github-action-oidc"
