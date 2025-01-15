@@ -1,0 +1,28 @@
+name: Torder CEO Deploy Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      SERVICE_ENV:
+        description: "Select the SERVICE_ENV (dev/qa/stg/prd)"
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - qa
+          - stg
+          - prd
+
+jobs:
+  build:
+    environment: ${{ github.event.inputs.SERVICE_ENV }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Print BUCKET_NAME
+        run: echo "BUCKET_NAME is $BUCKET_NAME"
+        env:
+          BUCKET_NAME: ${{ vars.BUCKET_NAME }} # BUCKET_NAME을 GitHub Secrets에 설정해두었다고 가정
