@@ -17,6 +17,7 @@ permissions:
   id-token: write
 
 env:
+  PAT: ${{ secrets.PAT }}
   AWS_ROLE_ARN: "arn:aws:iam::578868370045:role/shared-role-for-github-action-oidc"
   AWS_REGION: "ap-northeast-2"
   AWS_SECRET_MANAGER_ARN: "arn:aws:secretsmanager:ap-northeast-2:578868370045:secret:dev/torder-ceo/front-EiHqyH"
